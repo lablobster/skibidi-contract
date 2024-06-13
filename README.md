@@ -1,6 +1,10 @@
-# Sample Hardhat Project
+# SKBD
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+SKIBIDI TOILET is a hyper-deflationary memecoin on Rollux.
+
+It does some magic ever TX, so diamond hands are rewarded by the SKBD deities.
+
+More info on [skibidi.icu](https://skibidi.icu)
 
 Try running some of the following tasks:
 

@@ -30,7 +30,7 @@ import {ISwapRouter} from "@pollum-io/v3-periphery/contracts/interfaces/ISwapRou
    ▄████▀    ▀██████▀  █▀   █████▄▄██   ██████████    ▄████▀                                                             
 */
 /// @title Skibidi Token Contract
-/// @notice This contract implements tokenomics and functionalities for the Skibidi token, including LP fee claiming and burning mechanism.
+/// @notice This contract implements tokenomics and functionalities for the SKBD token, including LP fee claiming and burning mechanism.
 contract Skibidi is ERC20 {
     using Address for address;
 
@@ -52,12 +52,12 @@ contract Skibidi is ERC20 {
     IPegasysV3Pool public pool;
 
     /// @dev Initializes the contract, mints the total supply to the deployer, and creates a pool with WSYS.
-    constructor() ERC20("SKIBIDI TOILET", "SKIBIDI") {
+    constructor() ERC20("SKIBIDI TOILET", "SKBD") {
         _mint(_msgSender(), 696969696969696969e18);
         pool = IPegasysV3Pool(FACTORY.createPool(address(this), WSYS, 10000));
     }
 
-    /// @notice Claims LP fees for the provided token IDs and burns the collected WSYS tokens by swapping them for SKIBIDI and then transferring to the dead address.
+    /// @notice Claims LP fees for the provided token IDs and burns the collected WSYS tokens by swapping them for SKBD and then transferring to the dead address.
     /// @param tokenIds An array of token IDs for which to claim LP fees.
     function claimLpFeeAndBurn(uint256[] calldata tokenIds) external {
         for (uint i = 0; i < tokenIds.length; i++) {
