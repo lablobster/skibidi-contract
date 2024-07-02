@@ -34,8 +34,8 @@ import {ISwapRouter} from "@pollum-io/v3-periphery/contracts/interfaces/ISwapRou
 contract Skibidi is ERC20 {
     using Address for address;
 
-    // Address of the Wrapped Syscoin (WSYS) token.
-    address private constant WSYS = 0x4200000000000000000000000000000000000006;
+    // Address of the Pegasys (PSYS) token.
+    address private constant PSYS = 0x48023b16c3e81AA7F6eFFbdEB35Bb83f4f31a8fd;
     // Address used for burning tokens.
     address private constant DEAD = 0x000000000000000000000000000000000000dEaD;
     // The Pegasys V3 Factory contract address for creating and managing pools.
@@ -51,10 +51,10 @@ contract Skibidi is ERC20 {
     /// @notice The Pegasys V3 Pool associated with this token.
     IPegasysV3Pool public pool;
 
-    /// @dev Initializes the contract, mints the total supply to the deployer, and creates a pool with WSYS.
+    /// @dev Initializes the contract, mints the total supply to the deployer, and creates a pool with PSYS.
     constructor() ERC20("SKIBIDI TOILET", "SKBD") {
         _mint(_msgSender(), 696969696969696969e18);
-        pool = IPegasysV3Pool(FACTORY.createPool(address(this), WSYS, 10000));
+        pool = IPegasysV3Pool(FACTORY.createPool(address(this), PSYS, 10000));
     }
 
     /// @notice Claims LP fees for the provided token IDs and burns the collected WSYS tokens by swapping them for SKBD and then transferring to the dead address.
@@ -71,16 +71,16 @@ contract Skibidi is ERC20 {
             );
         }
 
-        uint256 wsysBalance = IERC20(WSYS).balanceOf(address(this));
-        IERC20(WSYS).approve(address(SWAP_ROUTER), wsysBalance);
+        uint256 psysBalance = IERC20(PSYS).balanceOf(address(this));
+        IERC20(PSYS).approve(address(SWAP_ROUTER), psysBalance);
         ISwapRouter.ExactInputSingleParams memory params = ISwapRouter
             .ExactInputSingleParams({
-                tokenIn: WSYS,
+                tokenIn: PSYS,
                 tokenOut: address(this),
                 fee: 10000,
                 recipient: address(this),
                 deadline: block.timestamp,
-                amountIn: wsysBalance,
+                amountIn: psysBalance,
                 amountOutMinimum: 0,
                 sqrtPriceLimitX96: 0
             });
@@ -89,7 +89,7 @@ contract Skibidi is ERC20 {
         transfer(DEAD, balanceOf(address(this)));
     }
 
-    /// @dev Overrides the _transfer function to apply a 4.20% fee for transactions between EOAs, transferring the fee to the dead address.
+    /// @dev Overrides the _transfer function to apply a 4.20% fee for transactions, transferring the fee to the dead address.
     /// @param sender The address sending the tokens.
     /// @param recipient The address receiving the tokens.
     /// @param amount The amount of tokens to be transferred.
@@ -102,8 +102,8 @@ contract Skibidi is ERC20 {
         uint256 feeAmount = 0;
         uint256 amountAfterFee = amount;
 
-        // Applies a fee only if either sender or recipient is an EOA
-        if (!sender.isContract() || !recipient.isContract()) {
+        // Applies a fee only if recipient is an EOA
+        if (!recipient.isContract()) {
             feeAmount = (amount * feePercentage) / 10000;
             amountAfterFee = amount - feeAmount;
 
